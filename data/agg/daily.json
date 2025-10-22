@@ -1,0 +1,50 @@
+
+{
+  "show_id": "SHOW_DEMO",
+  "window_days": 7,
+  "topics_weekly": [
+    {"topic": "betrayal", "count": 48},
+    {"topic": "plot_twist", "count": 36},
+    {"topic": "romance", "count": 22},
+    {"topic": "character_arc", "count": 15},
+    {"topic": "redemption", "count": 9}
+  ],
+  "character_daily": [
+    {"date": "2025-10-15", "character": "ALICE", "avg_sentiment": 0.18},
+    {"date": "2025-10-15", "character": "BOB", "avg_sentiment": -0.05},
+    {"date": "2025-10-16", "character": "ALICE", "avg_sentiment": 0.25},
+    {"date": "2025-10-16", "character": "BOB", "avg_sentiment": -0.15},
+    {"date": "2025-10-17", "character": "ALICE", "avg_sentiment": 0.05},
+    {"date": "2025-10-17", "character": "BOB", "avg_sentiment": -0.20},
+    {"date": "2025-10-17", "character": "CHARLIE", "avg_sentiment": 0.50},
+    {"date": "2025-10-18", "character": "ALICE", "avg_sentiment": 0.10},
+    {"date": "2025-10-18", "character": "BOB", "avg_sentiment": -0.22},
+    {"date": "2025-10-18", "character": "CHARLIE", "avg_sentiment": 0.55}
+  ],
+  "character_wow_delta": [
+    {"character": "ALICE", "current": 0.12, "last_week": 0.30},
+    {"character": "BOB", "current": -0.22, "last_week": -0.10},
+    {"character": "CHARLIE", "current": 0.52, "last_week": 0.40},
+    {"character": "DAVID", "current": -0.50, "last_week": -0.10},
+    {"character": "EVE", "current": -0.30, "last_week": -0.05}
+  ],
+  "episodes": [
+    {"episode_id": "S01E01", "avg_sentiment": 0.05},
+    {"episode_id": "S01E02", "avg_sentiment": 0.12},
+    {"episode_id": "S01E03", "avg_sentiment": -0.08},
+    {"episode_id": "S01E04", "avg_sentiment": 0.20},
+    {"episode_id": "S01E05", "avg_sentiment": -0.15}
+  ],
+  "mentions_sample": [
+    {"platform": "reddit", "created_at": "2025-10-15T10:03:00Z", "text": "That twist in E2 was wild", "sentiment": 0.6, "topics": ["plot_twist"]},
+    {"platform": "youtube", "created_at": "2025-10-16T09:21:00Z", "text": "Bob felt out of character", "sentiment": -0.4, "topics": ["character_arc"]},
+    {"platform": "twitter", "created_at": "2025-10-17T11:00:00Z", "text": "Alice and Charlie have great chemistry!", "sentiment": 0.8, "topics": ["romance"]},
+    {"platform": "reddit", "created_at": "2025-10-18T14:30:00Z", "text": "I can't believe what David did.", "sentiment": -0.9, "topics": ["betrayal"]},
+    {"platform": "youtube", "created_at": "2025-10-19T18:00:00Z", "text": "The redemption arc for Eve is starting to show.", "sentiment": 0.5, "topics": ["redemption"]},
+    {"platform": "twitter", "created_at": "2025-10-20T12:00:00Z", "text": "This show is getting so good!", "sentiment": 0.9, "topics": ["plot_twist"]},
+    {"platform": "reddit", "created_at": "2025-10-21T15:00:00Z", "text": "I hate Bob now.", "sentiment": -0.8, "topics": ["character_arc"]},
+    {"platform": "youtube", "created_at": "2025-10-22T09:00:00Z", "text": "The latest episode was a masterpiece.", "sentiment": 0.9, "topics": ["plot_twist"]},
+    {"platform": "twitter", "created_at": "2025-10-22T10:00:00Z", "text": "Alice is my favorite character.", "sentiment": 0.7, "topics": ["romance"]},
+    {"platform": "reddit", "created_at": "2025-10-22T11:00:00Z", "text": "I knew David was going to betray everyone.", "sentiment": -0.7, "topics": ["betrayal"]}
+  ]
+}
