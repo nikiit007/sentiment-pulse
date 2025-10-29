@@ -1,3 +1,5 @@
 dash
 plotly
 pandas
+responses
+pydantic-settings
