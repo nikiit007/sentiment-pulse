@@ -1,0 +1,13 @@
+[project]
+name = "sentiment-pulse"
+version = "0.1.0"
+description = "Sentiment Pulse is a lightweight analytics dashboard that summarizes how audiences are reacting to a show or franchise across social media.It turns raw comments into topics, sentiment, and character trends so content or marketing teams can instantly see what’s resonating"
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "dash>=3.2.0",
+    "pandas>=2.3.3",
+    "plotly>=6.3.1",
+    "pydantic-settings>=2.11.0",
+    "responses>=0.25.8",
+]
