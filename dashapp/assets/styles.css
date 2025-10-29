@@ -1,61 +1,171 @@
+
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Base Styling */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f0f2f5;
+    font-family: 'Inter', sans-serif;
+    background-color: #fdfdfd;
     color: #333;
     margin: 0;
+    padding: 0;
 }
 
-.header {
+/* Sidebar Styling */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 16rem;
+    padding: 1rem;
     background-color: #fff;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    z-index: 100;
 }
 
-.header h1 {
-    margin: 0;
-    font-size: 1.5em;
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-.container {
-    padding: 20px;
+.sidebar-header h2 {
+    color: #333;
+    font-weight: 700;
 }
 
+.nav-link {
+    color: #555;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.nav-link i {
+    margin-right: 0.75rem;
+}
+
+/* Content Styling */
+.content {
+    margin-left: 16rem;
+    padding: 2rem;
+}
+
+/* Card Styling */
 .card {
     background-color: #fff;
-    border-radius: 5px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    border: 1px solid #eee;
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Table Styling */
+.table {
+    color: #333;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+.table th, .table td {
+    border-top: 1px solid #eee;
+}
+
+/* Sentiment Coloring */
+.sentiment-positive {
+    color: #4CAF50;
+}
+
+.sentiment-negative {
+    color: #f44336;
+}
+
+.sentiment-neutral {
+    color: #757575;
+}
+
+/* Mentions Card */
+.mention-card {
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 .mention {
+    padding: 1rem;
     border-bottom: 1px solid #eee;
-    padding: 10px 0;
+    transition: background-color 0.2s;
 }
 
 .mention:last-child {
     border-bottom: none;
 }
 
+.mention:hover {
+    background-color: #f7f7f7;
+}
+
+.mention-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
 .platform-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 3px;
-    font-size: 0.8em;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.platform-twitter { background-color: #1DA1F2; color: #fff; }
+.platform-reddit { background-color: #FF4500; color: #fff; }
+.platform-youtube { background-color: #FF0000; color: #fff; }
+
+.sentiment-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
     color: #fff;
 }
 
-.platform-reddit { background-color: #FF4500; }
-.platform-youtube { background-color: #FF0000; }
-.platform-twitter { background-color: #1DA1F2; }
-
-.sentiment-chip {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 99px;
-    font-size: 0.8em;
-    color: #fff;
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    .content {
+        margin-left: 0;
+    }
 }
