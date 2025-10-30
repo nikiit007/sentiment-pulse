@@ -1,3 +1,6 @@
 dash
 plotly
 pandas
+responses
+pydantic-settings
+dash-bootstrap-components
