@@ -1,55 +1,74 @@
 # Topic Trend & Sentiment Pulse (Local Demo)
 
-This is a local-only sample UI for "Topic Trend & Sentiment Pulse" with MOCK data.
+Local-only demo UI for **Topic Trend & Sentiment Pulse** using mock data.
 
-## How to Run
+---
 
-There are two ways to run this project: locally with `uv` or using Docker.
+## Run Locally (with `uv`)
 
-### Local Development (with `uv`)
+> Works with Python **3.10–3.13**. Dash dependencies may break on 3.14.
 
-1.  **Install `uv`**:
+1. **Install `uv`**
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
 
-    ```bash
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    ```
+2. **Ensure Python 3.12 is available**
+   ```bash
+   uv python install 3.12
+   ```
 
-2.  **Create a virtual environment**:
+3. **Create and seed a virtual environment**
+   ```bash
+   uv venv --python 3.12 --seed
+   ```
 
-    ```bash
-    uv venv
-    ```
+4. **Install dependencies**
+   ```bash
+   uv sync
+   ```
+   This reads both `pyproject.toml` and `uv.lock` to install exact versions.
 
-3.  **Install dependencies**:
+5. **Run the application**
+   ```bash
+   uv run python dashapp/app.py
+   ```
 
-    ```bash
-    uv pip install -r requirements.txt
-    ```
+6. **Open in browser**
+   [http://127.0.0.1:8050](http://127.0.0.1:8050)
 
-4.  **Run the application**:
+---
 
-    ```bash
-    uv run python dashapp/app.py
-    ```
+## Run in Docker
 
-5.  **Open in your browser**:
+1. **Build the image**
+   ```bash
+   docker build -t sentiment-pulse .
+   ```
 
-    Navigate to [http://127.0.0.1:8050](http://127.0.0.1:8050)
+2. **Run the container**
+   ```bash
+   docker run -p 8050:8050 sentiment-pulse
+   ```
 
-### Running with Docker
+3. **Open in browser**
+   [http://127.0.0.1:8050](http://127.0.0.1:8050)
 
-1.  **Build the Docker image**:
+---
 
-    ```bash
-    docker build -t sentiment-pulse .
-    ```
+## Notes
 
-2.  **Run the Docker container**:
+- To add a new dependency:
+  ```bash
+  uv add <package-name>
+  ```
+  Then commit updated `pyproject.toml` and `uv.lock`.
 
-    ```bash
-    docker run -p 8050:8050 sentiment-pulse
-    ```
+- To export pinned dependencies:
+  ```bash
+  uv export -o requirements.txt
+  ```
 
-3.  **Open in your browser**:
+- `.venv/` should be ignored in `.gitignore`.
 
-    Navigate to [http://127.0.0.1:8050](http://127.0.0.1:8050)
+---
