@@ -43,7 +43,7 @@ Local-only demo UI for **Topic Trend & Sentiment Pulse** using mock data.
 
 1. **Build the image**
    ```bash
-   docker build -t sentiment-pulse .
+   docker build --no-cache -t sentiment-pulse .
    ```
 
 2. **Run the container**
