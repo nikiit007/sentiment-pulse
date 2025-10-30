@@ -1,20 +1,22 @@
-# 1. Use slim Python base
-FROM python:3.12-slim AS base
+FROM python:3.12-slim
 
-# 2. Install uv (tiny binary)
-ENV PATH="/root/.cargo/bin:${PATH}"
+# install curl for the installer
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+  && rm -rf /var/lib/apt/lists/*
+
+# uv installer writes to /root/.local/bin
+ENV PATH="/root/.local/bin:${PATH}"
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
 WORKDIR /app
-COPY requirements.txt ./
 
-# 3. Install deps in one layer
-RUN uv pip install -r requirements.txt --no-cache
+# use lockfile for deterministic installs and better caching
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-cache
 
-# 4. Copy source code
+# app code
 COPY dashapp ./dashapp
 COPY data ./data
 
-# 5. Run app
 EXPOSE 8050
 CMD ["uv", "run", "python", "dashapp/app.py"]
