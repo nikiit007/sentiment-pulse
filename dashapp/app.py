@@ -5,6 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash import Dash, html, dcc, Input, Output
 import dash_bootstrap_components as dbc
+import dash_mantine_components as dmc # Added for dark mode toggle
 
 # --- Configuration & Data Loading ---
 DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'agg', 'daily.json')
@@ -36,8 +37,8 @@ def create_topics_bar_chart(data):
     )
     fig.update_layout(
         yaxis={'categoryorder': 'total ascending'},
-        paper_bgcolor='#fff', plot_bgcolor='#fff',
-        font=dict(color='#333')
+        paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', # Transparent background
+        font=dict(color='#fff') # White text for dark mode
     )
     return fig
 
@@ -51,9 +52,9 @@ def create_sentiment_heatmap(data):
     ))
     fig.update_layout(
         title='Character Sentiment Heatmap',
-        template='plotly_white',
-        paper_bgcolor='#fff', plot_bgcolor='#fff',
-        font=dict(color='#333')
+        template='plotly_dark',
+        paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', # Transparent background
+        font=dict(color='#fff') # White text for dark mode
     )
     return fig
 
@@ -66,9 +67,9 @@ def create_episode_sentiment_chart(data):
         template='plotly_dark'
     )
     fig.update_layout(
-        template='plotly_white',
-        paper_bgcolor='#fff', plot_bgcolor='#fff',
-        font=dict(color='#333')
+        template='plotly_dark',
+        paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', # Transparent background
+        font=dict(color='#fff') # White text for dark mode
     )
     return fig
 
@@ -94,35 +95,37 @@ def create_character_table(data):
             html.Td(f"{row['current']:.2f}", className=get_color(row['current'])),
             html.Td(f"{row['delta']:.2f}", className=get_color(row['delta']))
         ]))
-    return dbc.Table(rows, striped=True, bordered=True, hover=True, className="table-dark")
+    return dbc.Table(rows, striped=True, bordered=True, hover=True, className="table-light") # Use table-light for better contrast
 
 def create_mentions_card(data):
-    """Create a styled, scrollable card for mentions."""
+    """Create a styled, scrollable card for mentions using bubble-style UI."""
     mentions = data['mentions_sample']
 
-    def get_sentiment_badge(sentiment):
+    def get_sentiment_pill(sentiment):
         if sentiment > 0.3:
-            return dbc.Badge("Positive", color="success", className="ml-1")
+            return html.Span("Positive", className="sentiment-pill positive")
         if sentiment < -0.3:
-            return dbc.Badge("Negative", color="danger", className="ml-1")
-        return dbc.Badge("Neutral", color="secondary", className="ml-1")
+            return html.Span("Negative", className="sentiment-pill negative")
+        return html.Span("Neutral", className="sentiment-pill neutral")
+
+    bubbles = [
+        html.Div([
+            html.P(mention['text']),
+            html.Div([
+                get_sentiment_pill(mention['sentiment']),
+                html.Span(
+                    f"{mention['platform'].capitalize()} · {pd.to_datetime(mention['created_at']).strftime('%b %d, %H:%M')}",
+                    className="timestamp"
+                )
+            ], className="mention-footer")
+        ], className="mention-bubble")
+        for mention in mentions
+    ]
 
     return dbc.Card([
         dbc.CardHeader("Recent Mentions"),
-        dbc.CardBody([
-            html.Div([
-                html.Div([
-                    html.Div([
-                        html.Span(mention['platform'].capitalize(), className=f"platform-badge platform-{mention['platform']}"),
-                        html.Span(f" {pd.to_datetime(mention['created_at']).strftime('%Y-%m-%d %H:%M')}", className="text-muted small"),
-                        get_sentiment_badge(mention['sentiment'])
-                    ], className="mention-header"),
-                    html.P(mention['text'], className="mb-0")
-                ], className="mention")
-                for mention in mentions
-            ], className="mention-card")
-        ])
-    ], className="h-100")
+        dbc.CardBody(html.Div(bubbles, className="mention-card"))
+    ], className="h-100 glass-card") # Added glass-card class
 
 # --- App Layout ---
 sidebar = html.Div(
@@ -143,25 +146,71 @@ sidebar = html.Div(
             vertical=True, pills=True,
         ),
     ],
-    className="sidebar",
+    className="sidebar glass-panel", # Added glass-panel class
+)
+
+# --- Dark Mode Toggle ---
+# Placed here to be included in the main layout
+theme_toggle = dmc.Switch(
+    id="theme-toggle",
+    size="lg",
+    radius="sm",
+    onLabel="🌙",
+    offLabel="☀️",
+    color="dark",
+    checked=True, # Default to dark mode
+    style={"position": "fixed", "top": "1.5rem", "right": "1.5rem", "z-index": "101"}
 )
 
 content = html.Div(id="page-content", className="content")
 
-app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
+app.layout = dmc.MantineProvider(
+    id="theme-provider",
+    theme={"colorScheme": "dark"}, # Default to dark theme
+    withGlobalClasses=True, # Corrected argument
+    children=[
+        dcc.Location(id="url"),
+        sidebar,
+        content,
+        theme_toggle
+    ]
+)
 
 # --- Callbacks ---
+@app.callback(
+    Output("theme-provider", "theme"),
+    Input("theme-toggle", "checked")
+)
+def update_theme(checked):
+    """Toggle between light and dark mode."""
+    return {"colorScheme": "dark" if checked else "light"}
+
+app.clientside_callback(
+    """
+    function(theme) {
+        if (theme && theme.colorScheme === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
+        }
+        return '';
+    }
+    """,
+    Output('theme-provider', 'id'), # Dummy output
+    Input('theme-provider', 'theme')
+)
+
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     """Render content based on the URL."""
     if pathname == "/":
         return dbc.Container([
             dbc.Row([
-                dbc.Col(dbc.Card(dcc.Graph(figure=create_topics_bar_chart(data))), width=12, lg=6),
-                dbc.Col(dbc.Card(dcc.Graph(figure=create_sentiment_heatmap(data))), width=12, lg=6),
+                dbc.Col(dbc.Card(dcc.Graph(figure=create_topics_bar_chart(data)), className="glass-card"), width=12, lg=6),
+                dbc.Col(dbc.Card(dcc.Graph(figure=create_sentiment_heatmap(data)), className="glass-card"), width=12, lg=6),
             ], className="mb-4"),
             dbc.Row([
-                dbc.Col(dbc.Card(dcc.Graph(figure=create_episode_sentiment_chart(data))), width=12, lg=6),
+                dbc.Col(dbc.Card(dcc.Graph(figure=create_episode_sentiment_chart(data)), className="glass-card"), width=12, lg=6),
                 dbc.Col(create_mentions_card(data), width=12, lg=6),
             ]),
         ], fluid=True)
@@ -171,7 +220,7 @@ def render_page_content(pathname):
                 dbc.Col(dbc.Card([
                     dbc.CardHeader("Character Sentiment Breakdown"),
                     dbc.CardBody(create_character_table(data))
-                ]), width=12)
+                ], className="glass-card"), width=12)
             ])
         ], fluid=True)
     return html.Div(
