@@ -18,5 +18,5 @@ RUN uv sync --frozen --no-cache
 COPY dashapp ./dashapp
 COPY data ./data
 
-EXPOSE 8050
+EXPOSE 8080
 CMD ["uv", "run", "python", "dashapp/app.py"]
