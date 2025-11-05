@@ -1,6 +1,6 @@
 
 /* Import Google Font */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Pacifico&display=swap');
 
 /* --- Base Styling --- */
 body {
@@ -12,6 +12,10 @@ body {
     padding: 0;
     min-height: 100vh;
     transition: background-color 0.5s ease; /* Added transition for smooth theme change */
+}
+
+body:not(.dark-theme) {
+    color: #000;
 }
 
 /* --- Glassmorphism Helper Class --- */
@@ -42,9 +46,10 @@ body {
 }
 
 .sidebar-header h2 {
-    color: #fff; /* Updated text color */
+    font-family: 'Pacifico', cursive; /* Stylish font */
+    color: #8a2be2; /* Purple color */
     font-weight: 700;
-    text-shadow: 1px 1px 5px rgba(0,0,0,0.2); /* Added text shadow for readability */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.4); /* More pronounced text shadow */
 }
 
 .sidebar-header i {
@@ -59,6 +64,9 @@ body {
     margin-bottom: 0.5rem;
     transition: background-color 0.2s, color 0.2s;
     font-weight: 500;
+}
+body:not(.dark-theme) .nav-link {
+    color: #000;
 }
 
 .nav-link:hover, .nav-link.active {
@@ -84,6 +92,9 @@ body {
     color: #333; /* Default card text color */
     background-color: transparent; /* Ensure cards are transparent to show glass effect */
 }
+body:not(.dark-theme) .card {
+    color: #000;
+}
 
 /* --- Glass Card Styling --- */
 .glass-card {
@@ -106,6 +117,9 @@ body {
     padding: 1rem 1.5rem;
     color: #fff; /* Header text color */
 }
+body:not(.dark-theme) .card-header {
+    color: #000;
+}
 
 .card-body {
     padding: 1.5rem;
@@ -114,6 +128,9 @@ body {
 /* Table Styling */
 .table {
     color: #333;
+}
+body:not(.dark-theme) .table {
+    color: #000;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
@@ -167,6 +184,9 @@ body {
     margin: 0;
     color: #fff; /* White text for bubbles */
 }
+body:not(.dark-theme) .mention-bubble p {
+    color: #000;
+}
 
 .mention-footer {
     display: flex;
@@ -191,6 +211,9 @@ body {
 .timestamp {
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.7);
+}
+body:not(.dark-theme) .timestamp {
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .mention {

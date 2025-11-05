@@ -27,7 +27,7 @@ app = Dash(
 server = app.server
 
 # --- Reusable Chart and Table Functions ---
-def create_topics_bar_chart(data):
+def create_topics_bar_chart(data, theme):
     """Create a styled horizontal bar chart for top trending themes."""
     df = pd.DataFrame(data['topics_weekly'])
     fig = px.bar(
@@ -35,14 +35,15 @@ def create_topics_bar_chart(data):
         title='Top Trending Themes (This Week)',
         template='plotly_white', color='count', color_continuous_scale=px.colors.sequential.Viridis
     )
+    font_color = '#fff' if theme == 'dark' else '#000'
     fig.update_layout(
         yaxis={'categoryorder': 'total ascending'},
         paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', # Transparent background
-        font=dict(color='#fff') # White text for dark mode
+        font=dict(color=font_color) # White text for dark mode
     )
     return fig
 
-def create_sentiment_heatmap(data):
+def create_sentiment_heatmap(data, theme):
     """Create a styled heatmap for character sentiment."""
     df = pd.DataFrame(data['character_daily'])
     pivot_df = df.pivot(index='character', columns='date', values='avg_sentiment')
@@ -50,15 +51,18 @@ def create_sentiment_heatmap(data):
         z=pivot_df.values, x=pivot_df.columns, y=pivot_df.index,
         colorscale='RdBu', zmid=0
     ))
+    font_color = '#fff' if theme == 'dark' else '#000'
     fig.update_layout(
         title='Character Sentiment Heatmap',
         template='plotly_dark',
         paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', # Transparent background
-        font=dict(color='#fff') # White text for dark mode
+        font=dict(color=font_color),
+        xaxis=dict(linecolor='#fff' if theme == 'dark' else '#000'),
+        yaxis=dict(linecolor='#fff' if theme == 'dark' else '#000')
     )
     return fig
 
-def create_episode_sentiment_chart(data):
+def create_episode_sentiment_chart(data, theme):
     """Create a styled line chart for episode sentiment trends."""
     df = pd.DataFrame(data['episodes'])
     fig = px.line(
@@ -66,10 +70,11 @@ def create_episode_sentiment_chart(data):
         title='Episode Sentiment Trend', markers=True,
         template='plotly_dark'
     )
+    font_color = '#fff' if theme == 'dark' else '#000'
     fig.update_layout(
         template='plotly_dark',
         paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', # Transparent background
-        font=dict(color='#fff') # White text for dark mode
+        font=dict(color=font_color) # White text for dark mode
     )
     return fig
 
@@ -200,17 +205,32 @@ app.clientside_callback(
     Input('theme-provider', 'theme')
 )
 
+@app.callback(
+    Output("topics-bar-chart", "figure"),
+    Output("sentiment-heatmap", "figure"),
+    Output("episode-sentiment-chart", "figure"),
+    Input("theme-provider", "theme")
+)
+def update_graphs(theme):
+    color_scheme = theme.get("colorScheme", "light")
+    return (
+        create_topics_bar_chart(data, color_scheme),
+        create_sentiment_heatmap(data, color_scheme),
+        create_episode_sentiment_chart(data, color_scheme)
+    )
+
+
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     """Render content based on the URL."""
     if pathname == "/":
         return dbc.Container([
             dbc.Row([
-                dbc.Col(dbc.Card(dcc.Graph(figure=create_topics_bar_chart(data)), className="glass-card"), width=12, lg=6),
-                dbc.Col(dbc.Card(dcc.Graph(figure=create_sentiment_heatmap(data)), className="glass-card"), width=12, lg=6),
+                dbc.Col(dbc.Card(dcc.Graph(id="topics-bar-chart"), className="glass-card"), width=12, lg=6),
+                dbc.Col(dbc.Card(dcc.Graph(id="sentiment-heatmap"), className="glass-card"), width=12, lg=6),
             ], className="mb-4"),
             dbc.Row([
-                dbc.Col(dbc.Card(dcc.Graph(figure=create_episode_sentiment_chart(data)), className="glass-card"), width=12, lg=6),
+                dbc.Col(dbc.Card(dcc.Graph(id="episode-sentiment-chart"), className="glass-card"), width=12, lg=6),
                 dbc.Col(create_mentions_card(data), width=12, lg=6),
             ]),
         ], fluid=True)
