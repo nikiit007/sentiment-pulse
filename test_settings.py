@@ -1,17 +1,29 @@
-from pydantic import field_validator
-from pydantic_settings import BaseSettings
-from typing import List, Optional
 import os
+import pytest
 
-class TestSettings(BaseSettings):
-    YT_SEARCH_TERMS: List[str] = []
+from backend.models.config import YouTubeSettings
 
-    @field_validator("YT_SEARCH_TERMS", mode="before")
-    def split_search_terms(cls, v):
-        if isinstance(v, str):
-            return v.split(',')
-        return v
 
-print(f"YT_SEARCH_TERMS from env: {os.environ.get('YT_SEARCH_TERMS')}")
-settings = TestSettings()
-print(settings.YT_SEARCH_TERMS)
+@pytest.fixture(autouse=True)
+def clear_env(monkeypatch):
+    """Ensure we start each test without leaking settings."""
+    for key in ("YT_SEARCH_TERMS",):
+        monkeypatch.delenv(key, raising=False)
+
+
+def test_comma_separated_terms(monkeypatch):
+    monkeypatch.setenv("YT_SEARCH_TERMS", "foo, bar, baz ")
+    settings = YouTubeSettings()
+    assert settings.YT_SEARCH_TERMS == ["foo", "bar", "baz"]
+
+
+def test_json_list_terms(monkeypatch):
+    monkeypatch.setenv("YT_SEARCH_TERMS", '["Sandman", "Dream"]')
+    settings = YouTubeSettings()
+    assert settings.YT_SEARCH_TERMS == ["Sandman", "Dream"]
+
+
+def test_empty_string_terms(monkeypatch):
+    monkeypatch.setenv("YT_SEARCH_TERMS", "")
+    settings = YouTubeSettings()
+    assert settings.YT_SEARCH_TERMS == []
