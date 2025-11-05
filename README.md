@@ -35,7 +35,7 @@ Local-only demo UI for **Topic Trend & Sentiment Pulse** using mock data.
    ```
 
 6. **Open in browser**
-   [http://127.0.0.1:8050](http://127.0.0.1:8050)
+   [http://0.0.0.0:8080](http://0.0.0.0:8080)
 
 ---
 
@@ -52,7 +52,7 @@ Local-only demo UI for **Topic Trend & Sentiment Pulse** using mock data.
    ```
 
 3. **Open in browser**
-   [http://127.0.0.1:8050](http://127.0.0.1:8050)
+   [http://0.0.0.0:8080](http://0.0.0.1:8080)
 
 ---
 
